@@ -1,0 +1,159 @@
+expose:
+  type: ingress
+  tls:
+    enabled: true
+    hosts:
+      core: core.harbor.35.233.79.169.xip.io
+    controller: default
+    annotations:
+      ingress.kubernetes.io/ssl-redirect: "true"
+      ingress.kubernetes.io/proxy-body-size: "0"
+      nginx.ingress.kubernetes.io/ssl-redirect: "true"
+      nginx.ingress.kubernetes.io/proxy-body-size: "0"
+
+externalURL: https://core.harbor.35.233.79.169.xip.io
+
+persistence:
+  enabled: true
+  resourcePolicy: ""
+  persistentVolumeClaim:
+    registry:
+      existingClaim: ""
+      storageClass: ""
+      subPath: ""
+      accessMode: ReadWriteOnce
+      size: 5Gi
+    chartmuseum:
+      existingClaim: ""
+      storageClass: ""
+      subPath: ""
+      accessMode: ReadWriteOnce
+      size: 5Gi
+    jobservice:
+      existingClaim: ""
+      storageClass: ""
+      subPath: ""
+      accessMode: ReadWriteOnce
+      size: 1Gi
+    database:
+      existingClaim: ""
+      storageClass: ""
+      subPath: ""
+      accessMode: ReadWriteOnce
+      size: 1Gi
+    redis:
+      existingClaim: ""
+      storageClass: ""
+      subPath: ""
+      accessMode: ReadWriteOnce
+      size: 1Gi
+  imageChartStorage:
+    disableredirect: false
+    type: filesystem
+    filesystem:
+      rootdirectory: /storage
+
+imagePullPolicy: IfNotPresent
+
+logLevel: debug
+harborAdminPassword: "Harbor12345"
+secretKey: "not-a-secure-key"
+
+portal:
+  image:
+    repository: goharbor/harbor-portal
+    tag: v1.8.6
+  replicas: 1
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  podAnnotations: {}
+
+core:
+  image:
+    repository: goharbor/harbor-core
+    tag: v1.8.6
+  replicas: 1
+  livenessProbe:
+    initialDelaySeconds: 300
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  podAnnotations: {}
+
+jobservice:
+  image:
+    repository: goharbor/harbor-jobservice
+    tag: v1.8.6
+  replicas: 1
+  maxJobWorkers: 10
+  jobLogger: file
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  podAnnotations: {}
+
+registry:
+  registry:
+    image:
+      repository: goharbor/registry-photon
+      tag: v2.7.1-patch-2819-v1.8.6
+  controller:
+    image:
+      repository: goharbor/harbor-registryctl
+      tag: v1.8.6
+  replicas: 1
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  podAnnotations: {}
+  enabled: true
+
+chartmuseum:
+  enabled: true
+  image:
+    repository: goharbor/chartmuseum-photon
+    tag: v0.9.0-v1.8.6
+  replicas: 1
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  podAnnotations: {}
+
+clair:
+  enabled: true
+  image:
+    repository: goharbor/clair-photon
+    tag: v2.1.0-v1.8.6
+  replicas: 1
+  updatersInterval: 12
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  podAnnotations: {}
+
+notary:
+  enabled: false
+
+database:
+  type: internal
+  internal:
+    image:
+      repository: goharbor/harbor-db
+      tag: v1.8.6
+    password: "changeit"
+    nodeSelector: {}
+    tolerations: []
+    affinity: {}
+  podAnnotations: {}
+
+redis:
+  type: internal
+  internal:
+    image:
+      repository: goharbor/redis-photon
+      tag: v1.8.6
+    nodeSelector: {}
+    tolerations: []
+    affinity: {}
+  podAnnotations: {}

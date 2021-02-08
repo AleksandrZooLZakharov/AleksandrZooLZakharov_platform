@@ -1,0 +1,30 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: frontend-ingress
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    kubernetes.io/tls-acme: "true"
+    cert-manager.io/cluster-issuer: "letsencrypt-production"
+    cert-manager.io/acme-challenge-type: http01
+    {{- if eq .Values.ingress.needtoblock true }}
+    nginx.ingress.kubernetes.io/server-snippet: |
+         location ~* {{ .Values.ingress.blockedpath }} {
+             deny all;
+             return 403;
+           }
+    {{- end }}
+
+spec:
+  rules:
+  - host: {{ .Values.ingress.host }} 
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: frontend
+          servicePort: {{ .Values.service.targetPort }}
+  tls:
+  - hosts:
+    - {{ .Values.ingress.host }}
+    secretName: {{ .Values.ingress.host }}

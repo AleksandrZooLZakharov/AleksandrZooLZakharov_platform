@@ -1,0 +1,43 @@
+
+repositories:
+  - name: stable
+    url: https://charts.helm.sh/stable    
+  - name: jetstack
+    url: https://charts.jetstack.io
+  - name: harbor
+    url: https://helm.goharbor.io
+
+helmDefaults:
+  wait: true
+
+releases:
+## Nginx-ingress
+  - name: nginx-ingress
+    namespace: nginx-ingress
+    chart: stable/nginx-ingress
+    version: 1.41.3
+    values:
+      - annotations:
+          cert-manager.io/cluster-issuer: "letsencrypt-production"
+          kubernetes.io/tls-acme: "true"
+
+## Cert-manager
+  - name: cert-manager
+    namespace: cert-manager
+    chart: jetstack/cert-manager
+    version: 0.16.1
+    values:
+      - installCRDs:
+          enabled: true
+        ingressShim.default-issuer-name: "letsencrypt-production"
+        ingressShim.default-issuer-kind: "ClusterIssuer"
+        ingressShim.default-issuer-group: "cert-manager.io"
+
+## Harbor
+  - name: harbor
+    namespace: harbor
+    chart: harbor/harbor
+    version: 1.1.2
+    values:
+      - harbor-values.yaml
+
