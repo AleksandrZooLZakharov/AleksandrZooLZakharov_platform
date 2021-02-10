@@ -1,0 +1,9 @@
+dependencies:
+ - name: frontend
+   version: 0.1.0
+   repository: "file://../frontend"
+   
+ - name: redis
+   version: 12.7.4
+   repository: "https://charts.bitnami.com/bitnami"
+
