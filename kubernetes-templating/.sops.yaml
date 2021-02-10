@@ -1,0 +1,5 @@
+creation_rules:
+        # Finally, if the rules above have not matched, this one is a
+        # catchall that will encrypt the file using KMS set C
+        # The absence of a path_regex means it will match everything
+        - pgp: '4050E4CF9F336D4AADE32705DC4AC4C21DC2D1B7'

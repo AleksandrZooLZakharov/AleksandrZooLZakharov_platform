@@ -5,7 +5,7 @@ frontend:
   ingress:
     host: shop.35.233.79.169.nip.io
     needtoblock: false
-    blockedpath: V7KIM
+    blockedpath: VLKSMFOREVER
   service:
     type: NodePort
     port: 80
